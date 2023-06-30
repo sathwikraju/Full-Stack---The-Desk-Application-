@@ -1,7 +1,10 @@
+package fix_bugs;
+
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Main {
+public class Fix_Bugs {
 
     public static void main(String[] args) {
         /*System.out.println("Hello World!");*/
@@ -34,55 +37,55 @@ public class Main {
         expenses.add(110);
         expenses.addAll(arrlist);
         System.out.println("\nEnter your choice:\t");
-        Scanner sc = new Scanner(System.in);
-        int  options =  sc.nextInt();
-        for(int j=1;j<=slen;j++){
-            if(options==j){
-                switch (options){
-                    case 1:
-                        System.out.println("Your saved expenses are listed below: \n");
-                        System.out.println(expenses+"\n");
-                        optionsSelection();
-                        break;
-                    case 2:
-                        System.out.println("Enter the value to add your Expense: \n");
-                        int value = sc.nextInt();
-                        expenses.add(value);
-                        System.out.println("Your value is updated\n");
-                        expenses.addAll(arrlist);
-                        System.out.println(expenses+"\n");
-                        optionsSelection();
+        try (Scanner sc = new Scanner(System.in)) {
+			int  options =  sc.nextInt();
+			for(int j=1;j<=slen;j++){
+			    if(options==j){
+			        switch (options){
+			            case 1:
+			                System.out.println("Your saved expenses are listed below: \n");
+			                System.out.println(expenses+"\n");
+			                optionsSelection();
+			                break;
+			            case 2:
+			                System.out.println("Enter the value to add your Expense: \n");
+			                int value = sc.nextInt();
+			                expenses.add(value);
+			                System.out.println("Your value is updated\n");			             
+			                System.out.println(expenses+"\n");
+			                optionsSelection();
 
-                        break;
-                    case 3:
-                        System.out.println("You are about the delete all your expenses! \nConfirm again by selecting the same option...\n");
-                        int con_choice = sc.nextInt();
-                        if(con_choice==options){
-                               expenses.clear();
-                            System.out.println(expenses+"\n");
-                            System.out.println("All your expenses are erased!\n");
-                        } else {
-                            System.out.println("Oops... try again!");
-                        }
-                        optionsSelection();
-                        break;
-                    case 4:
-                        sortExpenses(expenses);
-                        optionsSelection();
-                        break;
-                    case 5:
-                        searchExpenses(expenses);
-                        optionsSelection();
-                        break;
-                    case 6:
-                        closeApp();
-                        break;
-                    default:
-                        System.out.println("You have made an invalid choice!");
-                        break;
-                }
-            }
-        }
+			                break;
+			            case 3:
+			                System.out.println("You are about the delete all your expenses! \nConfirm again by selecting the same option...\n");
+			                int con_choice = sc.nextInt();
+			                if(con_choice==options){
+			                       expenses.clear();
+			                    System.out.println(expenses+"\n");
+			                    System.out.println("All your expenses are erased!\n");
+			                } else {
+			                    System.out.println("Oops... try again!");
+			                }
+			                optionsSelection();
+			                break;
+			            case 4:
+			                sortExpenses(expenses);
+			                optionsSelection();
+			                break;
+			            case 5:
+			                searchExpenses(expenses);
+			                optionsSelection();
+			                break;
+			            case 6:
+			                closeApp();
+			                break;
+			            default:
+			                System.out.println("You have made an invalid choice!");
+			                break;
+			        }
+			    }
+			}
+		}
 
     }
     private static void closeApp() {
@@ -90,28 +93,25 @@ public class Main {
             }
     private static void searchExpenses(ArrayList<Integer> arrayList) {
         int leng = arrayList.size();
-        System.out.println("Enter the expense you need to search:\t");
-        try (Scanner scanner = new Scanner(System.in)) {
-			if (scanner.hasNextInt()) {
-			    int expense = scanner.nextInt();
-			    boolean found = false;
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.println("Enter the expense you need to search:");
+            int expense = sc.nextInt();
+        	boolean found = false;
+            for (int i = 0; i < leng; i++) {
+                if (arrayList.get(i) == expense) {
+                    System.out.println("Expense found at index " + i);
+                    found = true;
+                    break;
+                }
+            }
 
-			    for (int i = 0; i < leng; i++) {
-			        if (arrayList.get(i) == expense) {
-			            System.out.println("Expense found at index " + i);
-			            found = true;
-			            break;
-			        }
-			    }
-			    
-			    if (!found) {
-			        System.out.println("Expense not found");
-			    }
-			} 
-			else {
-			    System.out.println("Invalid input. Please enter a valid integer expense value.");
-			}
-		}
+            if (!found) {
+                System.out.println("Expense not found.");
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("Invalid input. Please enter a valid expense.");
+        }
     }
     private static void sortExpenses(ArrayList<Integer> arrayList) {
         int arrlength =  arrayList.size();
